@@ -1,0 +1,48 @@
+### Project specific files
+config/*
+!config/application.properties.EXAMPLE
+!config/application-docker.properties
+logs/
+.env
+docker-compose-dev.yml
+
+HELP.md
+.gradle
+build/
+!**/src/main/**
+!**/src/test/**
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### JPA Buddy ###
+.jpb
+
+# cypress example files
+**/cypress/e2e/examples/
+
+# Transpiled Jest tests
+/src/main/webapp/__tests__/**.test.js

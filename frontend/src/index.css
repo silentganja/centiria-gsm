@@ -1,0 +1,345 @@
+/* ============================================
+   CENTIRIA GSM - Design System
+   Game Server Management for Arma Reforger
+   ============================================ */
+
+/* --- CSS Custom Properties (Design Tokens) --- */
+:root {
+  /* Core Colors */
+  --bg-primary: #06090f;
+  --bg-secondary: #0c1220;
+  --bg-tertiary: #111827;
+  --bg-card: rgba(17, 24, 39, 0.7);
+  --bg-card-hover: rgba(17, 24, 39, 0.9);
+  --bg-glass: rgba(17, 24, 39, 0.45);
+  --bg-input: rgba(15, 23, 42, 0.6);
+
+  /* Accent Colors */
+  --accent-primary: #00e87b;
+  --accent-primary-dim: rgba(0, 232, 123, 0.15);
+  --accent-primary-glow: rgba(0, 232, 123, 0.3);
+  --accent-secondary: #38bdf8;
+  --accent-secondary-dim: rgba(56, 189, 248, 0.15);
+  --accent-warning: #f59e0b;
+  --accent-warning-dim: rgba(245, 158, 11, 0.15);
+  --accent-danger: #ef4444;
+  --accent-danger-dim: rgba(239, 68, 68, 0.15);
+  --accent-info: #818cf8;
+  --accent-info-dim: rgba(129, 140, 248, 0.15);
+
+  /* Text Colors */
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --text-accent: #00e87b;
+
+  /* Borders */
+  --border-subtle: rgba(148, 163, 184, 0.08);
+  --border-default: rgba(148, 163, 184, 0.12);
+  --border-hover: rgba(148, 163, 184, 0.2);
+  --border-accent: rgba(0, 232, 123, 0.3);
+
+  /* Spacing */
+  --sidebar-width: 260px;
+  --sidebar-collapsed: 72px;
+  --navbar-height: 0px;
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px rgba(0, 232, 123, 0.15);
+  --shadow-glow-strong: 0 0 40px rgba(0, 232, 123, 0.25);
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Typography */
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* --- Reset --- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-display);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* --- Scrollbar --- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-tertiary);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--text-tertiary) transparent;
+}
+
+/* --- Selection --- */
+::selection {
+  background: var(--accent-primary-dim);
+  color: var(--accent-primary);
+}
+
+/* --- Focus Visible --- */
+:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* --- Links --- */
+a {
+  color: var(--accent-secondary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--accent-primary);
+}
+
+/* --- Keyframe Animations --- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 8px rgba(0, 232, 123, 0.2); }
+  50% { box-shadow: 0 0 20px rgba(0, 232, 123, 0.4); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+@keyframes borderGlow {
+  0%, 100% { border-color: rgba(0, 232, 123, 0.2); }
+  50% { border-color: rgba(0, 232, 123, 0.5); }
+}
+
+@keyframes dotPulse {
+  0%, 80%, 100% { transform: scale(0); opacity: 0; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+/* --- Utility Classes --- */
+.glass {
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--border-subtle);
+}
+
+.glass-strong {
+  background: rgba(17, 24, 39, 0.65);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  border: 1px solid var(--border-default);
+}
+
+.animate-in {
+  animation: fadeIn 0.4s var(--transition-base) both;
+}
+
+.animate-in-scale {
+  animation: fadeInScale 0.35s var(--transition-base) both;
+}
+
+.status-online {
+  color: var(--accent-primary);
+}
+
+.status-offline {
+  color: var(--text-tertiary);
+}
+
+.status-warning {
+  color: var(--accent-warning);
+}
+
+.status-error {
+  color: var(--accent-danger);
+}
+
+/* Status dot indicator */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.status-dot--online {
+  background: var(--accent-primary);
+  box-shadow: 0 0 8px var(--accent-primary-glow);
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+.status-dot--offline {
+  background: var(--text-tertiary);
+}
+
+.status-dot--installing {
+  background: var(--accent-warning);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Mono text for data values */
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  letter-spacing: -0.02em;
+}
+
+/* Card hover lift effect */
+.card-hover {
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-hover);
+}
+
+/* Terminal/Log styling */
+.terminal-text {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: var(--accent-primary);
+  background: rgba(0, 0, 0, 0.4);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Page-level animation stagger */
+.page-content > * {
+  animation: fadeIn 0.4s ease both;
+}
+.page-content > *:nth-child(1) { animation-delay: 0ms; }
+.page-content > *:nth-child(2) { animation-delay: 60ms; }
+.page-content > *:nth-child(3) { animation-delay: 120ms; }
+.page-content > *:nth-child(4) { animation-delay: 180ms; }
+.page-content > *:nth-child(5) { animation-delay: 240ms; }
+
+/* Background mesh gradient */
+#root {
+  min-height: 100vh;
+  position: relative;
+}
+
+#root::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(ellipse at 15% 10%, rgba(0, 232, 123, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 20%, rgba(56, 189, 248, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(129, 140, 248, 0.02) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Responsive helpers */
+@media (max-width: 768px) {
+  :root {
+    --sidebar-width: 0px;
+  }
+}
