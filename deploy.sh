@@ -141,10 +141,18 @@ collect_user_config() {
     echo -e "${BOLD}  Step 4: Steam API Key${NC}"
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
-    echo -e "  Get your key at: ${CYAN}https://steamcommunity.com/dev/apikey${NC}"
+    echo -e "  To manage Arma Reforger Workshop Mods, Centiria GSM needs a Steam API Key."
+    echo -e "  "
+    echo -e "  ${BOLD}How to get it:${NC}"
+    echo -e "  1. Log into your Steam account on your computer browser."
+    echo -e "  2. Go to: ${CYAN}https://steamcommunity.com/dev/apikey${NC}"
+    echo -e "  3. You will be asked for a ${BOLD}\"Domain Name\"${NC}."
+    echo -e "     ${YELLOW}Tip:${NC} You can simply enter your domain (${DOMAIN:-centiria.my}) or 'localhost'."
+    echo -e "     Steam only needs this for their records; it does not affect functionality."
+    echo -e "  4. Click Register and copy the generated 32-character key."
     echo ""
 
-    read -rp "$(echo -e "${CYAN}Steam API Key${NC} (leave empty to set later): ")" INPUT_STEAM_KEY
+    read -rp "$(echo -e "${CYAN}Enter Steam API Key${NC} (leave empty to configure later in panel): ")" INPUT_STEAM_KEY
     STEAM_API_KEY="${INPUT_STEAM_KEY:-}"
 
     echo ""
