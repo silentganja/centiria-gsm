@@ -38,9 +38,6 @@ class ServerInstanceService {
     }
 
     public Server createServer(Server server) {
-        if (server.getId() == null && serverRepository.count() >= 1) {
-            throw new IllegalStateException("Centiria GSM restricts deployment to a maximum of 1 server per VPS.");
-        }
         server.getCustomLaunchParameters().forEach(param -> param.setServer(server));
         Server persistedServer = serverRepository.save(server);
         persistedServer.getConfigFiles().forEach(ServerConfig::generate);

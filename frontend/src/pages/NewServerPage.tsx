@@ -1,25 +1,17 @@
 import {useNavigate, useParams} from "react-router-dom";
-import {createServer, getServers} from "../services/serversService";
+import {createServer} from "../services/serversService";
 import {toast} from "material-react-toastify";
 import {Box, Stack, Typography} from "@mui/material";
 import EditReforgerServerSettingsForm from "../components/servers/EditReforgerServerSettingsForm";
 import {reforgerServerInitialState} from "./initialServerStateCreator";
-import {useEffect} from "react";
 
 const NewServerPage = () => {
     const {type} = useParams<{ type: string }>();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        getServers().then(({data}) => {
-            if (data.servers.length >= 1) {
-                toast.error("Deployment limit reached. Only 1 server per VPS is allowed.");
-                navigate("/servers");
-            }
-        });
-    }, [navigate]);
+    type FixMeLater = any;
 
-    const handleSubmit = async (values: import("../dtos/ServerDto").ReforgerServerDto) => {
+    const handleSubmit = async (values: FixMeLater) => {
         const server = {
             ...values,
             type: type ?? "REFORGER",

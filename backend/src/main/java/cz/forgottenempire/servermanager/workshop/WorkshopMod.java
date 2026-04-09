@@ -24,12 +24,6 @@ public class WorkshopMod {
     @Id
     private Long id;
     private String name;
-    private String author;
-
-    @Column(length = 2000)
-    private String description;
-    private String thumbnailUrl;
-
     private LocalDateTime lastUpdated;
     private Long fileSize;
 
@@ -64,14 +58,6 @@ public class WorkshopMod {
         retVal = "@".concat(retVal);
 
         return retVal;
-    }
-
-    /**
-     * Get the hex GUID representation of this mod's ID (for Reforger config)
-     */
-    @JsonIgnore
-    public String getHexId() {
-        return Long.toHexString(id).toUpperCase();
     }
 
     public void addBiKey(String biKey) {

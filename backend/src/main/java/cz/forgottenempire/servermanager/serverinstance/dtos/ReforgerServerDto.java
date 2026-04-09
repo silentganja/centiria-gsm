@@ -32,7 +32,6 @@ public class ReforgerServerDto implements ServerDto {
 
     private boolean battlEye;
     private boolean thirdPersonViewEnabled;
-    private boolean crossplayEnabled;
 
     private List<ReforgerModDto> activeMods;
 

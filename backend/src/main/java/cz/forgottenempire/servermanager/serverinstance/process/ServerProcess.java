@@ -1,5 +1,6 @@
 package cz.forgottenempire.servermanager.serverinstance.process;
 
+import com.google.common.base.Joiner;
 import cz.forgottenempire.servermanager.common.PathsFactory;
 import cz.forgottenempire.servermanager.serverinstance.AutomaticRestartTask;
 import cz.forgottenempire.servermanager.serverinstance.ServerConfig;
@@ -54,7 +55,7 @@ public class ServerProcess {
         server.getLog().prepare();
 
         try {
-            log.info("Starting server with options: {}", String.join(" ", parameters));
+            log.info("Starting server with options: {}", Joiner.on(" ").join(parameters));
             process = serverProcessCreator.startProcessWithRedirectedOutput(executable, parameters, server.getLog().getFile());
             log.info("Server '{}' (ID {}) started (PID {})", server.getName(), server.getId(), process.pid());
         } catch (IOException e) {

@@ -1,4 +1,5 @@
-import {Box, Stack, Typography, Alert, AlertTitle} from "@mui/material";
+import {Box, Stack, Typography} from "@mui/material";
+import SteamAuthForm from "../components/appConfig/SteamAuthForm";
 import SettingsIcon from '@mui/icons-material/Settings';
 
 const AppConfigPage = () => {
@@ -15,15 +16,14 @@ const AppConfigPage = () => {
                             WebkitTextFillColor: 'transparent',
                         }}
                     >
-                        Global Settings
+                        Settings
                     </Typography>
                     <SettingsIcon sx={{color: '#64748b'}}/>
                 </Stack>
                 <Typography variant="body2" sx={{color: '#64748b'}}>
-                    Centiria GSM System Configuration
+                    Configure Steam authentication and app settings
                 </Typography>
             </Stack>
-            
             <Box
                 sx={{
                     p: {xs: 2.5, md: 3},
@@ -33,21 +33,7 @@ const AppConfigPage = () => {
                     border: '1px solid rgba(148, 163, 184, 0.08)',
                 }}
             >
-                <Alert 
-                    severity="info" 
-                    sx={{
-                        background: 'rgba(56, 189, 248, 0.1)',
-                        color: '#bae6fd',
-                        border: '1px solid rgba(56, 189, 248, 0.2)',
-                        '& .MuiAlert-icon': {
-                            color: '#38bdf8'
-                        }
-                    }}
-                >
-                    <AlertTitle sx={{ fontWeight: 700, color: '#e0f2fe' }}>Steam Authentication Deprecated</AlertTitle>
-                    Arma Reforger natively utilizes the Bohemia Interactive backend to manage and download workshop content autonomously.<br/><br/>
-                    <strong>You no longer need to link a Steam Account, provide a Steam Guard token, or use a Steam Web API Key to operate public servers or download mods.</strong>
-                </Alert>
+                <SteamAuthForm/>
             </Box>
         </Box>
     );

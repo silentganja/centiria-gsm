@@ -26,7 +26,6 @@ public class ReforgerServer extends Server {
 
     private boolean thirdPersonViewEnabled;
     private boolean battlEye;
-    private boolean crossplayEnabled;
 
     @ElementCollection
     private List<ReforgerMod> activeMods;

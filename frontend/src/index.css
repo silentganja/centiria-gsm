@@ -316,14 +316,7 @@ a:hover {
 .page-content > *:nth-child(4) { animation-delay: 180ms; }
 .page-content > *:nth-child(5) { animation-delay: 240ms; }
 
-/* Background animated mesh gradient */
-@keyframes ambientMesh {
-  0% { transform: scale(1) translate(0, 0); }
-  33% { transform: scale(1.05) translate(2%, 2%); }
-  66% { transform: scale(0.95) translate(-2%, -1%); }
-  100% { transform: scale(1) translate(0, 0); }
-}
-
+/* Background mesh gradient */
 #root {
   min-height: 100vh;
   position: relative;
@@ -332,14 +325,16 @@ a:hover {
 #root::before {
   content: '';
   position: fixed;
-  top: -10%; left: -10%; right: -10%; bottom: -10%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background:
-    radial-gradient(circle at 10% 20%, rgba(0, 232, 123, 0.05) 0%, transparent 40%),
-    radial-gradient(circle at 80% 30%, rgba(56, 189, 248, 0.04) 0%, transparent 45%),
-    radial-gradient(circle at 50% 80%, rgba(129, 140, 248, 0.03) 0%, transparent 50%);
+    radial-gradient(ellipse at 15% 10%, rgba(0, 232, 123, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 20%, rgba(56, 189, 248, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(129, 140, 248, 0.02) 0%, transparent 50%);
   pointer-events: none;
   z-index: 0;
-  animation: ambientMesh 20s ease-in-out infinite;
 }
 
 /* Responsive helpers */

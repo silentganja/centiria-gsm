@@ -57,7 +57,6 @@ export default function EditReforgerServerSettingsForm(props: EditReforgerServer
                         <FormGroup>
                             <SwitchField id='battlEye' label='BattlEye enabled' formik={formik}/>
                             <SwitchField id='thirdPersonViewEnabled' label='Third person view enabled' formik={formik}/>
-                            <SwitchField id='crossplayEnabled' label='Enable Crossplay (PC + Xbox)' formik={formik}/>
                         </FormGroup>
                     </Grid>
                     <Grid item xs={12}>

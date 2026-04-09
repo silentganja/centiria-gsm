@@ -1,5 +1,6 @@
 package cz.forgottenempire.servermanager.serverinstance.headlessclient;
 
+import com.google.common.base.Joiner;
 import cz.forgottenempire.servermanager.common.PathsFactory;
 import cz.forgottenempire.servermanager.common.ServerType;
 import cz.forgottenempire.servermanager.serverinstance.process.ServerProcessCreator;
@@ -38,7 +39,7 @@ public class HeadlessClient {
 
         try {
             List<String> parameters = prepareParameters();
-            log.info("Starting headless client with options: {}", String.join(" ", parameters));
+            log.info("Starting headless client with options: {}", Joiner.on(" ").join(parameters));
             process = serverProcessCreator.startProcessWithRedirectedOutput(executable, parameters, logFile);
         } catch (IOException e) {
             log.error("Failed to start headless client", e);

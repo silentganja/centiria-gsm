@@ -103,7 +103,6 @@ export function reforgerServerInitialState(): ReforgerServerDto {
         adminPassword: "",
         battlEye: true,
         thirdPersonViewEnabled: true,
-        crossplayEnabled: false,
         activeMods: [],
         customLaunchParameters: [],
         automaticRestart: {

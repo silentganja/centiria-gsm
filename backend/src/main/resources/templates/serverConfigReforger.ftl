@@ -11,10 +11,9 @@
 "scenarioId": "${scenarioId!}",
 "maxPlayers": ${maxPlayers},
 "visible": true,
-"crossPlatform": ${crossplayEnabled?then('true', 'false')},
+<#--TODO make supported client types configurable-->
 "supportedPlatforms": [
-"PLATFORM_PC"<#if crossplayEnabled>,
-"PLATFORM_XBL"</#if>
+"PLATFORM_PC"
 ],
 "gameProperties": {
 "serverMaxViewDistance": 2500,
@@ -30,8 +29,7 @@
 <#list activeMods as mod>
   {
   "modId": "${mod.id}",
-  "name": "${mod.name}",
-  "version": ""
+  "name": "${mod.name}"
   }<#sep>,</#sep>
 </#list>
 ]

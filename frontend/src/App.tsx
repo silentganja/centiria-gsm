@@ -1,18 +1,18 @@
 import {ToastContainer} from "material-react-toastify";
 import './App.css';
-import Sidebar from "./components/Sidebar.tsx";
+import Sidebar from "./components/Sidebar";
 import {Route, Routes} from "react-router-dom";
-import Login from "./components/auth/Login.tsx";
-import ProtectedRoute from "./components/ProtectedRoute.tsx";
-import ServersPage from "./pages/ServersPage.tsx";
-import ServerSettingsPage from "./pages/ServerSettingsPage.tsx";
-import ModsPage from "./pages/ModsPage.tsx";
-import NewServerPage from "./pages/NewServerPage.tsx";
+import Login from "./components/auth/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
+import ServersPage from "./pages/ServersPage";
+import ServerSettingsPage from "./pages/ServerSettingsPage";
+import ModsPage from "./pages/ModsPage";
+import NewServerPage from "./pages/NewServerPage";
 import {Box, createTheme, CssBaseline, ThemeProvider} from "@mui/material";
 import 'material-react-toastify/dist/ReactToastify.css'
-import ScenariosPage from "./pages/ScenariosPage.tsx";
-import AppConfigPage from "./pages/AppConfigPage.tsx";
-import DashboardPage from "./pages/DashboardPage.tsx";
+import ScenariosPage from "./pages/ScenariosPage";
+import AppConfigPage from "./pages/AppConfigPage";
+import DashboardPage from "./pages/DashboardPage";
 import ToolsPage from "./pages/ToolsPage.tsx";
 import MonitoringPage from "./pages/MonitoringPage.tsx";
 import {useContext, useState} from "react";

@@ -58,59 +58,6 @@ public class WorkshopModsFacade {
         return modsService.getAllMods(filter);
     }
 
-    /**
-     * Register and install an Arma Reforger mod using its Bohemia hex GUID.
-     * The mod metadata is fetched from the Bohemia Workshop by scraping the HTML page.
-     * The actual mod files are downloaded natively by the Reforger server executable on startup.
-     */
-    @Transactional
-    public WorkshopMod registerReforgerMod(String hexModId, @Nullable String customName) {
-        // Convert hex to Long for database storage
-        long numericId = Long.parseUnsignedLong(hexModId, 16);
-
-        // Check if already registered
-        Optional<WorkshopMod> existing = modsService.getMod(numericId);
-        if (existing.isPresent()) {
-            log.info("Reforger mod {} already registered, refreshing metadata", hexModId);
-            WorkshopMod mod = existing.get();
-            try {
-                ModMetadata metadata = fileDetailsService.fetchBohemiaModMetadata(hexModId);
-                mod.setName(metadata.name());
-                mod.setAuthor(metadata.author());
-                mod.setDescription(metadata.description());
-                mod.setThumbnailUrl(metadata.thumbnailUrl());
-            } catch (Exception e) {
-                log.warn("Could not refresh Bohemia metadata for {}: {}", hexModId, e.getMessage());
-            }
-            modsService.saveMod(mod);
-            return mod;
-        }
-
-        // Create new mod entry
-        WorkshopMod mod = new WorkshopMod(numericId);
-        mod.setServerType(ServerType.REFORGER);
-        mod.setInstallationStatus(InstallationStatus.INSTALLATION_IN_PROGRESS);
-
-        // Try to fetch metadata from Bohemia Workshop
-        try {
-            ModMetadata metadata = fileDetailsService.fetchBohemiaModMetadata(hexModId);
-            mod.setName(metadata.name());
-            mod.setAuthor(metadata.author());
-            mod.setDescription(metadata.description());
-            mod.setThumbnailUrl(metadata.thumbnailUrl());
-        } catch (Exception e) {
-            log.warn("Could not fetch Bohemia metadata for {}: {}", hexModId, e.getMessage());
-            mod.setName(customName != null ? customName : hexModId);
-        }
-
-        modsService.saveMod(mod);
-
-        // Trigger installation (which for Reforger just marks as FINISHED)
-        installerService.installOrUpdateMods(List.of(mod));
-
-        return mod;
-    }
-
     @Transactional
     public List<WorkshopMod> saveAndInstallMods(List<Long> ids) {
         List<WorkshopMod> workshopMods = ids.stream()
@@ -157,8 +104,6 @@ public class WorkshopModsFacade {
             mod.setServerType(ServerType.ARMA3);
         } else if (Constants.GAME_IDS.get(ServerType.DAYZ).toString().equals(consumerAppId)) {
             mod.setServerType(ServerType.DAYZ);
-        } else if ("1874900".equals(consumerAppId)) {
-            mod.setServerType(ServerType.REFORGER);
         } else {
             log.warn("Tried to install mod ID {} which is not consumed by any of the supported servers", mod.getId());
             throw new ModNotConsumedByGameException(
@@ -175,7 +120,6 @@ public class WorkshopModsFacade {
             throw new ServerNotInitializedException(
                     "Mod installation failed: Neither DayZ nor DayZ Experimental server is installed");
         }
-        // Reforger: no server init check needed, mods are downloaded by the server on startup
     }
 
     private boolean isServerNotInitialized(ServerType serverType) {

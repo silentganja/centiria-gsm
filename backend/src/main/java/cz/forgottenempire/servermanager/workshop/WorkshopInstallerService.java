@@ -48,21 +48,6 @@ class WorkshopInstallerService {
 
     @Transactional
     public void installOrUpdateMods(Collection<WorkshopMod> mods) {
-        if (mods.isEmpty()) return;
-        
-        // Arma Reforger handles mod downloading natively via the server executable on startup.
-        // We bypass SteamCMD entirely to avoid Steam Guard and auth blocks.
-        if (mods.iterator().next().getServerType() == ServerType.REFORGER) {
-            for (WorkshopMod mod : mods) {
-                mod.setInstallationStatus(InstallationStatus.FINISHED);
-                mod.setLastUpdated(LocalDateTime.now());
-                mod.setFileSize(0L); // Unknown size until downloaded by server
-                modsService.saveMod(mod);
-                log.info("Registered Reforger Mod '{}' (ID {}) for native Bohemia download on startup.", mod.getName(), mod.getId());
-            }
-            return;
-        }
-
         steamCmdService.installOrUpdateWorkshopMods(mods)
                 .thenAcceptAsync(steamCmdJob -> steamCmdJob.getRelatedWorkshopMods().forEach(
                         mod -> handleInstallation(mod, steamCmdJob)
