@@ -21,8 +21,7 @@ type ServerListEntryProps = {
     onStopServer: (id: number) => void,
     onRestartServer: (id: number) => void,
     onDeleteServer: (id: number) => void,
-    onOpenLogs: (id: number) => void,
-    onDuplicateServer: (server: ServerDto) => void
+    onOpenLogs: (id: number) => void
 }
 
 const ServerListEntry = (props: ServerListEntryProps) => {
@@ -33,7 +32,6 @@ const ServerListEntry = (props: ServerListEntryProps) => {
         onStopServer,
         onRestartServer,
         onDeleteServer,
-        onDuplicateServer,
         serverWithSamePortRunning
     } = props;
 
@@ -232,7 +230,6 @@ const ServerListEntry = (props: ServerListEntryProps) => {
                         <ServerListEntryDetails
                             server={server}
                             serverStatus={status}
-                            onDuplicateServer={onDuplicateServer}
                             onClick={() => props.onOpenLogs(server.id as number)}
                         />
                     </Box>

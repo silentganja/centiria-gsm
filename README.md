@@ -37,13 +37,15 @@
 
 Centiria GSM brings enterprise-grade management capabilities to your Arma Reforger servers. Instead of fighting with JSON files and Linux command lines, manage your entire community from a stunning **"Military Command Center"** dashboard.
 
-### 🎮 Server Operations
+### 🎮 Server Operations & Enterprise Limits
 
-- **Full Lifecycle Management**: Create, start, stop, kill, and auto-restart servers instantly.
-- **Multi-Server Architecture**: Run and manage multiple server instances from a single unified panel.
-- **Intelligent Port Management**: Automated port assignment and conflict prevention across all instances.
-- **JSON Configuration Engine**: Configure server parameters, passwords, and admin lists without touching raw JSON files.
-- **Automated Scheduling**: Set up precise daily restart schedules to keep servers fresh.
+> **Deployment Lock**: Centiria GSM enforces a strict **1 VPS = 1 Server Mode** to guarantee peak performance, prevent game-port crossovers, and ensure dedicated resource allocation. 
+
+- **Full Lifecycle Management**: Create, start, stop, kill, and auto-restart your dedicated instance.
+- **Crossplay Ready**: Built-in support to configure `PLATFORM_XBL` (Xbox Live) crossplay straight from the UI.
+- **Intelligent Configuration**: Fully manages game ports, query ports, and RCON ports automatically.
+- **JSON Configuration Engine**: Configure server parameters, passphrases, and admin lists without touching raw JSON files.
+- **Automated Scheduling**: Set up precise daily restart schedules to keep the instance fresh.
 - **Anonymous SteamCMD Download**: Base server files are downloaded via SteamCMD using anonymous login. No Steam account required.
 
 ### 🌐 Bohemia Workshop Integration (V2.1)
@@ -126,7 +128,7 @@ Arma Reforger uses a fundamentally different architecture from Arma 3 and DayZ f
 
 ## 🎨 Interface Showcase
 
-Our platform ditches standard utilitarian admin panels. We built Centiria GSM using a **Brutalist / Glassmorphism** design system — featuring deep dark mode aesthetics, dynamic GSAP kinetic animations, blurred backdrops, and responsive layouts built to feel like a high-end military operations center.
+Our platform ditches standard utilitarian admin panels. We built Centiria GSM using a **Brutalist / Glassmorphism** design system — featuring deep dark mode aesthetics, dynamic GSAP kinetic animations, blurred backdrops, moving atmospheric mesh grids, and responsive layouts built to feel like a high-end, **"alive"** military operations center.
 
 |                                                   🎛️ **Command Dashboard**                                                   |                                               📦 **Workshop Management**                                               |
 | :--------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------: |

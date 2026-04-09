@@ -11,9 +11,10 @@
 "scenarioId": "${scenarioId!}",
 "maxPlayers": ${maxPlayers},
 "visible": true,
-<#--TODO make supported client types configurable-->
+"crossPlatform": ${crossplayEnabled?then('true', 'false')},
 "supportedPlatforms": [
-"PLATFORM_PC"
+"PLATFORM_PC"<#if crossplayEnabled>,
+"PLATFORM_XBL"</#if>
 ],
 "gameProperties": {
 "serverMaxViewDistance": 2500,

@@ -5,13 +5,11 @@ import ListBuilderDLCsEdit from "../ListBuilderDLCsEdit.tsx";
 import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 import AutomaticRestartSettings from "./AutomaticRestartSettings.tsx";
 import {HeadlessClientControls} from "./HeadlessClientControls.tsx";
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 export function ServerListEntryDetails(props: {
     server: ServerDto,
     serverStatus: ServerInstanceInfoDto | null,
-    onClick: () => void,
-    onDuplicateServer: (server: ServerDto) => void
+    onClick: () => void
 }) {
     return <Stack direction="row">
         <Stack direction="row" spacing={2} justifyItems="center" alignItems="center" sx={{flexGrow: 1}}
@@ -30,15 +28,6 @@ export function ServerListEntryDetails(props: {
 
             {props.serverStatus?.alive && props.server.type === "ARMA3" &&
                 <HeadlessClientControls serverId={props.server.id!} serverStatus={props.serverStatus}/>}
-        </Stack>
-        <Stack direction="row" sx={{flexGrow: 0}}>
-            <Button
-                variant="outlined"
-                size="small"
-                startIcon={<ContentCopyIcon/>} onClick={() => props.onDuplicateServer(props.server)}
-                color="info">
-                Duplicate
-            </Button>
         </Stack>
     </Stack>;
 }

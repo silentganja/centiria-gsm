@@ -1,5 +1,4 @@
 import {
-    createServer,
     deleteServer,
     getServers,
     getServerStatus,
@@ -10,7 +9,7 @@ import {
 import {useEffect, useState} from "react";
 import {useInterval} from "../hooks/use-interval";
 import ServerListEntry from "../components/servers/serverListEntry/ServerListEntry.tsx";
-import {Box, Button, Chip, Stack, Typography} from "@mui/material";
+import {Box, Button, Chip, Stack, Typography, Alert} from "@mui/material";
 import {toast} from "material-react-toastify";
 import ConfirmationDialog from "../UI/ConfirmationDialog";
 import ServerLogs from "../components/servers/serverListEntry/ServerLogs.tsx";
@@ -18,6 +17,7 @@ import {ServerDto} from "../dtos/ServerDto";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import {Link} from "react-router-dom";
 import DnsIcon from '@mui/icons-material/Dns';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 type ServerInstance = {
     server: ServerDto,
@@ -30,6 +30,8 @@ const ServersPage = () => {
     const [serverToDelete, setServerToDelete] = useState<ServerDto | null>();
     const [logServerId, setLogServerId] = useState<number>();
     const [isLogOpen, setIsLogOpen] = useState(false);
+
+    const isServerLimitReached = serverInstances.length >= 1;
 
     useEffect(() => {
         fetchServers()
@@ -142,13 +144,6 @@ const ServersPage = () => {
         setIsLogOpen(false);
     }
 
-    const handleDuplicateServer = async (server: ServerDto) => {
-        const duplicatedServer = {...server, name: server.name + " (copy)"};
-        const {data: createdServer} = await createServer(duplicatedServer);
-        setServerInstances(prevState => [...prevState, {server: createdServer, status: null}]);
-        toast.success(`Server '${server.name}' successfully duplicated`);
-    };
-
     const onlineCount = serverInstances.filter(i => i.status && i.status.alive).length;
 
     return (
@@ -191,16 +186,35 @@ const ServersPage = () => {
                         Manage your Arma Reforger server instances
                     </Typography>
                 </Stack>
-                <Button
-                    component={Link}
-                    to="/servers/new/REFORGER"
-                    variant="contained"
-                    startIcon={<AddCircleOutlineIcon/>}
-                    sx={{px: 3}}
-                >
-                    New Reforger Server
-                </Button>
+                {!isServerLimitReached && (
+                    <Button
+                        component={Link}
+                        to="/servers/new/REFORGER"
+                        variant="contained"
+                        startIcon={<AddCircleOutlineIcon/>}
+                        sx={{px: 3}}
+                    >
+                        New Reforger Server
+                    </Button>
+                )}
             </Stack>
+
+            {isServerLimitReached && (
+                <Alert
+                    icon={<ErrorOutlineIcon fontSize="inherit" />}
+                    severity="info"
+                    sx={{
+                        mb: 3,
+                        background: 'rgba(56, 189, 248, 0.08)',
+                        color: '#bae6fd',
+                        border: '1px solid rgba(56, 189, 248, 0.15)',
+                        '& .MuiAlert-icon': {color: '#38bdf8'},
+                        borderRadius: '12px'
+                    }}
+                >
+                    <strong>Deployment Limit Reached:</strong> Centiria GSM is locked to 1 maximum server instance per VPS for optimal stability. Overriding is disabled.
+                </Alert>
+            )}
 
             {/* Server Log Modal */}
             {isLogOpen && logServerId !== undefined && <ServerLogs onClose={handleCloseLogs} serverId={logServerId}/>}
@@ -241,7 +255,6 @@ const ServersPage = () => {
                                          onStartServer={handleStartServer}
                                          onStopServer={handleStopServer}
                                          onRestartServer={handleRestartServer}
-                                         onDuplicateServer={handleDuplicateServer}
                                          onOpenLogs={handleOpenLogs}
                                          onDeleteServer={() => handleDeleteServerClicked(instance.server)}
                                          serverWithSamePortRunning={isServerWithSamePortRunning(instance.server)}
