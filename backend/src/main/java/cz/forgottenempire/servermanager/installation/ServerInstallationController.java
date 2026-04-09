@@ -4,8 +4,6 @@ import cz.forgottenempire.servermanager.common.ServerType;
 
 import java.util.List;
 
-import cz.forgottenempire.servermanager.serverinstance.dtos.AutomaticRestartDto;
-import cz.forgottenempire.servermanager.serverinstance.entities.Server;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,8 +3,7 @@
 # Centiria GSM - One-Command VPS Deployment Script
 # Game Server Management for Arma Reforger
 # Tested on: Ubuntu 22.04 LTS
-# Usage: curl -sSL https://raw.githubusercontent.com/silentganja/centiria-gsm/main/deploy.sh | bash
-# Or: bash deploy.sh
+# Usage: sudo bash deploy.sh
 # =============================================================================
 
 set -euo pipefail
@@ -21,7 +20,6 @@ NC='\033[0m'
 INSTALL_DIR="/opt/centiria-gsm"
 STORAGE_DIR="/home/centiria-gsm/storage"
 REPO_URL="https://github.com/silentganja/centiria-gsm.git"
-DOMAIN="centiria.my"
 
 # ─── Functions ───────────────────────────────────────────────────────────────
 banner() {
@@ -29,7 +27,7 @@ banner() {
     echo -e "${GREEN}╔══════════════════════════════════════════════════════════════╗${NC}"
     echo -e "${GREEN}║                                                              ║${NC}"
     echo -e "${GREEN}║    ${BOLD}Centiria GSM${NC}${GREEN} - Game Server Management                   ║${NC}"
-    echo -e "${GREEN}║    One-Command VPS Deployment                                ║${NC}"
+    echo -e "${GREEN}║    Interactive VPS Deployment                                ║${NC}"
     echo -e "${GREEN}║                                                              ║${NC}"
     echo -e "${GREEN}╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
@@ -64,6 +62,124 @@ check_root() {
         log_error "This script must be run as root. Use: sudo bash deploy.sh"
         exit 1
     fi
+}
+
+# ─── Interactive Setup Prompt ────────────────────────────────────────────────
+collect_user_config() {
+    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${BOLD}  Step 1: Domain & Network Configuration${NC}"
+    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+
+    # Domain
+    read -rp "$(echo -e "${CYAN}Enter your domain${NC} (e.g. centiria.my, leave empty to skip Nginx/SSL): ")" INPUT_DOMAIN
+    DOMAIN="${INPUT_DOMAIN:-}"
+
+    echo ""
+    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${BOLD}  Step 2: Login Panel Credentials${NC}"
+    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+    echo -e "  These credentials will be used to log into the Centiria GSM web panel."
+    echo ""
+
+    # Username
+    read -rp "$(echo -e "${CYAN}Panel username${NC} [default: admin]: ")" INPUT_USERNAME
+    AUTH_USERNAME="${INPUT_USERNAME:-admin}"
+
+    # Password
+    while true; do
+        read -srp "$(echo -e "${CYAN}Panel password${NC} (min 8 chars): ")" INPUT_PASSWORD
+        echo ""
+        if [ -z "$INPUT_PASSWORD" ]; then
+            INPUT_PASSWORD=$(generate_secret 12)
+            echo -e "  ${YELLOW}No password entered. Generated secure password:${NC} ${BOLD}${INPUT_PASSWORD}${NC}"
+            AUTH_PASSWORD="$INPUT_PASSWORD"
+            break
+        elif [ ${#INPUT_PASSWORD} -lt 8 ]; then
+            log_error "Password must be at least 8 characters. Try again."
+        else
+            read -srp "$(echo -e "${CYAN}Confirm password${NC}: ")" CONFIRM_PASSWORD
+            echo ""
+            if [ "$INPUT_PASSWORD" != "$CONFIRM_PASSWORD" ]; then
+                log_error "Passwords do not match. Try again."
+            else
+                AUTH_PASSWORD="$INPUT_PASSWORD"
+                break
+            fi
+        fi
+    done
+
+    echo ""
+    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${BOLD}  Step 3: Database Configuration${NC}"
+    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+
+    # DB password
+    read -srp "$(echo -e "${CYAN}Database password${NC} (leave empty to auto-generate): ")" INPUT_DB_PASSWORD
+    echo ""
+    if [ -z "$INPUT_DB_PASSWORD" ]; then
+        MYSQL_PASSWORD=$(generate_secret 16)
+        echo -e "  ${YELLOW}Auto-generated database password${NC}"
+    else
+        MYSQL_PASSWORD="$INPUT_DB_PASSWORD"
+    fi
+
+    # DB root password
+    read -srp "$(echo -e "${CYAN}Database root password${NC} (leave empty to auto-generate): ")" INPUT_DB_ROOT_PASSWORD
+    echo ""
+    if [ -z "$INPUT_DB_ROOT_PASSWORD" ]; then
+        MYSQL_ROOT_PASSWORD=$(generate_secret 16)
+        echo -e "  ${YELLOW}Auto-generated database root password${NC}"
+    else
+        MYSQL_ROOT_PASSWORD="$INPUT_DB_ROOT_PASSWORD"
+    fi
+
+    echo ""
+    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${BOLD}  Step 4: Steam API Key${NC}"
+    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+    echo -e "  Get your key at: ${CYAN}https://steamcommunity.com/dev/apikey${NC}"
+    echo ""
+
+    read -rp "$(echo -e "${CYAN}Steam API Key${NC} (leave empty to set later): ")" INPUT_STEAM_KEY
+    STEAM_API_KEY="${INPUT_STEAM_KEY:-}"
+
+    echo ""
+    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${BOLD}  Step 5: Timezone${NC}"
+    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+
+    read -rp "$(echo -e "${CYAN}Timezone${NC} [default: Asia/Kuala_Lumpur]: ")" INPUT_TIMEZONE
+    TIMEZONE="${INPUT_TIMEZONE:-Asia/Kuala_Lumpur}"
+
+    # Generate remaining secrets
+    JWT_SECRET=$(generate_secret 32)
+    DB_ENCRYPTION_SECRET=$(generate_aes_key)
+
+    echo ""
+    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${BOLD}  Configuration Summary${NC}"
+    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+    echo -e "  Domain:        ${CYAN}${DOMAIN:-[none - direct IP access]}${NC}"
+    echo -e "  Panel User:    ${CYAN}${AUTH_USERNAME}${NC}"
+    echo -e "  Panel Pass:    ${CYAN}********${NC}"
+    echo -e "  DB Password:   ${CYAN}********${NC}"
+    echo -e "  Steam API Key: ${CYAN}${STEAM_API_KEY:-[not set]}${NC}"
+    echo -e "  Timezone:      ${CYAN}${TIMEZONE}${NC}"
+    echo ""
+
+    read -rp "$(echo -e "${YELLOW}Proceed with installation? [Y/n]:${NC} ")" CONFIRM
+    CONFIRM="${CONFIRM:-Y}"
+    if [[ ! "$CONFIRM" =~ ^[Yy]$ ]]; then
+        log_error "Installation cancelled by user."
+        exit 0
+    fi
+    echo ""
 }
 
 # ─── Pre-flight Checks ──────────────────────────────────────────────────────
@@ -194,20 +310,13 @@ setup_project() {
     log_success "Project files ready"
 }
 
-# ─── Generate Secrets ────────────────────────────────────────────────────────
+# ─── Generate .env from user input ──────────────────────────────────────────
 generate_env() {
-    log_info "Generating secure configuration..."
-
-    # Generate secure random values
-    AUTH_PASSWORD=$(generate_secret 12)
-    MYSQL_PASSWORD=$(generate_secret 16)
-    MYSQL_ROOT_PASSWORD=$(generate_secret 16)
-    JWT_SECRET=$(generate_secret 32)
-    DB_ENCRYPTION_SECRET=$(generate_aes_key)
+    log_info "Writing configuration..."
 
     cat > "$INSTALL_DIR/.env" << EOF
 # ============================================
-# Centiria GSM - Auto-generated Configuration
+# Centiria GSM - Configuration
 # Generated on: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
 # ============================================
 
@@ -218,7 +327,7 @@ VERSION=latest
 STORAGE_PATH=${STORAGE_DIR}
 
 # Web UI credentials
-AUTH_USERNAME=admin
+AUTH_USERNAME=${AUTH_USERNAME}
 AUTH_PASSWORD=${AUTH_PASSWORD}
 
 # Database settings
@@ -228,9 +337,8 @@ MYSQL_USER=centiria_gsm
 MYSQL_PASSWORD=${MYSQL_PASSWORD}
 MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
 
-# Steam API key (fill in manually)
-# Generate at: https://steamcommunity.com/dev/apikey
-STEAM_API_KEY=
+# Steam API key
+STEAM_API_KEY=${STEAM_API_KEY}
 
 # JWT secret for authentication tokens
 JWT_SECRET=${JWT_SECRET}
@@ -239,14 +347,22 @@ JWT_SECRET=${JWT_SECRET}
 DATABASE_ENCRYPTION_SECRET=${DB_ENCRYPTION_SECRET}
 
 # Timezone
-TIMEZONE=Asia/Kuala_Lumpur
+TIMEZONE=${TIMEZONE}
 EOF
 
-    log_success "Configuration generated"
+    chmod 600 "$INSTALL_DIR/.env"
+    log_success "Configuration written to ${INSTALL_DIR}/.env"
 }
 
 # ─── Setup Nginx Reverse Proxy ───────────────────────────────────────────────
 setup_nginx() {
+    # Skip Nginx if no domain provided
+    if [ -z "$DOMAIN" ]; then
+        log_info "No domain specified. Skipping Nginx and SSL setup."
+        log_info "You can access the panel directly at http://<your-ip>:8080"
+        return
+    fi
+
     log_info "Setting up Nginx reverse proxy for ${DOMAIN}..."
 
     apt-get install -y -qq nginx certbot python3-certbot-nginx
@@ -348,8 +464,6 @@ start_services() {
 
 # ─── Print Summary ───────────────────────────────────────────────────────────
 print_summary() {
-    # Read generated credentials
-    source "$INSTALL_DIR/.env"
     SERVER_IP=$(curl -s ifconfig.me 2>/dev/null || hostname -I | awk '{print $1}')
 
     echo ""
@@ -360,24 +474,30 @@ print_summary() {
     echo -e "${GREEN}╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
     echo -e "${BOLD}Access URLs:${NC}"
-    echo -e "  Web UI:    ${CYAN}https://${DOMAIN}${NC}"
+    if [ -n "$DOMAIN" ]; then
+        echo -e "  Web UI:    ${CYAN}https://${DOMAIN}${NC}"
+    fi
     echo -e "  Direct:    ${CYAN}http://${SERVER_IP}:8080${NC}"
     echo -e "  Adminer:   ${CYAN}http://${SERVER_IP}:8090${NC}"
     echo ""
     echo -e "${BOLD}Login Credentials:${NC}"
-    echo -e "  Username:  ${YELLOW}admin${NC}"
+    echo -e "  Username:  ${YELLOW}${AUTH_USERNAME}${NC}"
     echo -e "  Password:  ${YELLOW}${AUTH_PASSWORD}${NC}"
     echo ""
     echo -e "${BOLD}Database:${NC}"
-    echo -e "  User:      ${YELLOW}${MYSQL_USER}${NC}"
+    echo -e "  User:      ${YELLOW}centiria_gsm${NC}"
     echo -e "  Password:  ${YELLOW}${MYSQL_PASSWORD}${NC}"
     echo -e "  Root Pass: ${YELLOW}${MYSQL_ROOT_PASSWORD}${NC}"
     echo ""
     echo -e "${BOLD}Important:${NC}"
     echo -e "  1. ${RED}Save these credentials now!${NC} They won't be shown again."
-    echo -e "  2. Generate a Steam API key at: https://steamcommunity.com/dev/apikey"
-    echo -e "  3. Add your Steam API key in the .env file: ${CYAN}nano ${INSTALL_DIR}/.env${NC}"
-    echo -e "  4. After adding the key, restart: ${CYAN}cd ${INSTALL_DIR} && docker compose restart${NC}"
+    if [ -z "$STEAM_API_KEY" ]; then
+        echo -e "  2. Generate a Steam API key at: https://steamcommunity.com/dev/apikey"
+        echo -e "  3. Add your Steam API key: ${CYAN}nano ${INSTALL_DIR}/.env${NC}"
+        echo -e "  4. After adding the key, restart: ${CYAN}cd ${INSTALL_DIR} && docker compose restart${NC}"
+    else
+        echo -e "  2. Steam API key is configured."
+    fi
     echo ""
     echo -e "${BOLD}Management Commands:${NC}"
     echo -e "  Start:     ${CYAN}cd ${INSTALL_DIR} && docker compose up -d${NC}"
@@ -388,7 +508,9 @@ print_summary() {
     echo -e "${BOLD}File Locations:${NC}"
     echo -e "  Config:    ${CYAN}${INSTALL_DIR}/.env${NC}"
     echo -e "  Storage:   ${CYAN}${STORAGE_DIR}${NC}"
-    echo -e "  Nginx:     ${CYAN}/etc/nginx/sites-available/centiria-gsm${NC}"
+    if [ -n "$DOMAIN" ]; then
+        echo -e "  Nginx:     ${CYAN}/etc/nginx/sites-available/centiria-gsm${NC}"
+    fi
     echo ""
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 
@@ -398,15 +520,19 @@ print_summary() {
 # Generated: $(date)
 # DELETE THIS FILE AFTER SAVING CREDENTIALS SECURELY
 
-Web UI Username: admin
+Web UI Username: ${AUTH_USERNAME}
 Web UI Password: ${AUTH_PASSWORD}
-Database User: ${MYSQL_USER}
+Database User: centiria_gsm
 Database Password: ${MYSQL_PASSWORD}
 Database Root Password: ${MYSQL_ROOT_PASSWORD}
 JWT Secret: ${JWT_SECRET}
-URL: https://${DOMAIN}
-Direct: http://${SERVER_IP}:8080
+Steam API Key: ${STEAM_API_KEY:-[not set]}
 CRED
+
+    if [ -n "$DOMAIN" ]; then
+        echo "URL: https://${DOMAIN}" >> "$INSTALL_DIR/CREDENTIALS.txt"
+    fi
+    echo "Direct: http://${SERVER_IP}:8080" >> "$INSTALL_DIR/CREDENTIALS.txt"
 
     chmod 600 "$INSTALL_DIR/CREDENTIALS.txt"
     log_info "Credentials saved to: ${INSTALL_DIR}/CREDENTIALS.txt"
@@ -417,6 +543,7 @@ CRED
 main() {
     banner
     check_root
+    collect_user_config
     preflight
     install_deps
     install_docker

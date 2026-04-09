@@ -3,8 +3,6 @@ package cz.forgottenempire.servermanager.installation;
 import cz.forgottenempire.servermanager.common.InstallationStatus;
 import cz.forgottenempire.servermanager.common.ServerType;
 import cz.forgottenempire.servermanager.common.exceptions.NotFoundException;
-import cz.forgottenempire.servermanager.util.SystemUtils;
-import cz.forgottenempire.servermanager.util.SystemUtils.OSType;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -49,9 +49,10 @@ const ScenariosPage = () => {
             await uploadScenarios(formData, {onUploadProgress: handleProgress});
             await refreshScenarios();
             toast.success("Scenarios successfully uploaded");
-        } catch (ex: any) {
+        } catch (ex: unknown) {
             console.error(ex);
-            toast.error(ex.response.data);
+            const axiosErr = ex as { response?: { data?: string } };
+            toast.error(axiosErr?.response?.data || "Upload failed");
         }
         setUploadInProgress(false);
         setPercentUploaded(0);

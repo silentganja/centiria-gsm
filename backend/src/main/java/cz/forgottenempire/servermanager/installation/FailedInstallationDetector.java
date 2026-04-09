@@ -1,6 +1,5 @@
 package cz.forgottenempire.servermanager.installation;
 
-import cz.forgottenempire.servermanager.common.InstallationStatus;
 import cz.forgottenempire.servermanager.steamcmd.ErrorStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;

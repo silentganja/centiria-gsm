@@ -1,7 +1,5 @@
 package cz.forgottenempire.servermanager.serverinstance;
 
-import cz.forgottenempire.servermanager.common.ServerType;
-import cz.forgottenempire.servermanager.serverinstance.entities.DayZServer;
 import cz.forgottenempire.servermanager.serverinstance.entities.Server;
 import cz.forgottenempire.servermanager.serverinstance.exceptions.ModifyingRunningServerException;
 import cz.forgottenempire.servermanager.serverinstance.process.ServerProcessService;

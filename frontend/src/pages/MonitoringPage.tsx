@@ -1,4 +1,4 @@
-import {useEffect, useState, useRef} from "react";
+import {useEffect, useState, useRef, useCallback} from "react";
 import {
     Box,
     Chip,
@@ -192,27 +192,8 @@ const MonitoringPage = () => {
 
     // Previous values for trend
     const prevCpu = useRef(0);
-    const prevMem = useRef(0);
 
-    useEffect(() => {
-        fetchMetrics();
-        fetchServerStats();
-        setEvents(prev => addEvent(prev, 'info', 'Monitoring page opened', 'System'));
-    }, []);
-
-    useInterval(() => {
-        if (autoRefresh) {
-            fetchMetrics();
-        }
-    }, 3000);
-
-    useInterval(() => {
-        if (autoRefresh) {
-            fetchServerStats();
-        }
-    }, 15000);
-
-    const fetchMetrics = async () => {
+    const fetchMetrics = useCallback(async () => {
         try {
             const {data: info} = await getSystemInfo();
             const cpu = Math.round(info.cpuUsage * 100);
@@ -220,10 +201,7 @@ const MonitoringPage = () => {
             const memPct = Math.round((memUsed / info.memoryTotal) * 100);
             const stoUsed = info.spaceTotal - info.spaceLeft;
 
-            prevCpu.current = cpuUsage;
-            prevMem.current = Math.round(((memoryTotal - (memoryTotal - memoryUsed)) / (memoryTotal || 1)) * 100);
-
-            setCpuUsage(cpu);
+            setCpuUsage((prev) => { prevCpu.current = prev; return cpu; });
             setMemoryUsed(memUsed);
             setMemoryTotal(info.memoryTotal);
             setStorageUsed(stoUsed);
@@ -235,9 +213,9 @@ const MonitoringPage = () => {
         } catch (e) {
             console.error(e);
         }
-    };
+    }, []);
 
-    const fetchServerStats = async () => {
+    const fetchServerStats = useCallback(async () => {
         try {
             const {data: serversData} = await getServers();
             const servers: ServerDto[] = serversData.servers;
@@ -260,7 +238,25 @@ const MonitoringPage = () => {
         } catch (e) {
             console.error(e);
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        fetchMetrics();
+        fetchServerStats();
+        setEvents(prev => addEvent(prev, 'info', 'Monitoring page opened', 'System'));
+    }, [fetchMetrics, fetchServerStats]);
+
+    useInterval(() => {
+        if (autoRefresh) {
+            fetchMetrics();
+        }
+    }, 3000);
+
+    useInterval(() => {
+        if (autoRefresh) {
+            fetchServerStats();
+        }
+    }, 15000);
 
     const getCpuTrend = (): 'up' | 'down' | 'stable' => {
         if (cpuUsage > prevCpu.current + 5) return 'up';
