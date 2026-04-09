@@ -10,6 +10,10 @@ public class ModDto {
     @Id
     private Long id;
     private String name;
+    private String author;
+    private String description;
+    private String thumbnailUrl;
+    private String hexId;
     private ServerType serverType;
     private Long fileSize;
     private String lastUpdated;

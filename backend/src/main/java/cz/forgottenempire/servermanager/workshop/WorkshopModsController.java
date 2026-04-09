@@ -2,8 +2,13 @@ package cz.forgottenempire.servermanager.workshop;
 
 import cz.forgottenempire.servermanager.common.ServerType;
 import cz.forgottenempire.servermanager.common.exceptions.NotFoundException;
+import cz.forgottenempire.servermanager.workshop.metadata.ModMetadata;
+import cz.forgottenempire.servermanager.workshop.metadata.ModMetadataService;
+
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +22,13 @@ import org.springframework.web.bind.annotation.*;
 class WorkshopModsController {
 
     private final WorkshopModsFacade modsFacade;
+    private final ModMetadataService metadataService;
     private final ModMapper modMapper = Mappers.getMapper(ModMapper.class);
 
     @Autowired
-    public WorkshopModsController(WorkshopModsFacade modsFacade) {
+    public WorkshopModsController(WorkshopModsFacade modsFacade, ModMetadataService metadataService) {
         this.modsFacade = modsFacade;
+        this.metadataService = metadataService;
     }
 
     @GetMapping
@@ -40,6 +47,36 @@ class WorkshopModsController {
     @GetMapping("/{id}")
     public ResponseEntity<ModDto> getMod(@PathVariable Long id) {
         WorkshopMod mod = findMod(id);
+        return ResponseEntity.ok(modMapper.modToModDto(mod));
+    }
+
+    /**
+     * Fetch mod details from Bohemia Workshop by hex GUID (no database registration).
+     * Used for the live mod browser preview.
+     */
+    @GetMapping("/bohemia/{hexId}")
+    public ResponseEntity<Map<String, Object>> getBohemiaModDetails(@PathVariable String hexId) {
+        log.info("Fetching Bohemia Workshop details for mod: {}", hexId);
+        ModMetadata metadata = metadataService.fetchBohemiaModMetadata(hexId);
+        return ResponseEntity.ok(Map.of(
+                "modId", hexId,
+                "name", metadata.name(),
+                "author", metadata.author() != null ? metadata.author() : "Unknown",
+                "description", metadata.description() != null ? metadata.description() : "",
+                "thumbnailUrl", metadata.thumbnailUrl() != null ? metadata.thumbnailUrl() : "",
+                "consumerAppId", metadata.consumerAppId()
+        ));
+    }
+
+    /**
+     * Register a Reforger mod by its Bohemia hex GUID.
+     * The mod metadata is scraped from reforger.armaplatform.com.
+     * The actual mod files are downloaded natively by the server on startup.
+     */
+    @PostMapping("/reforger")
+    public ResponseEntity<ModDto> registerReforgerMod(@RequestParam String modId, @RequestParam(required = false) String name) {
+        log.info("Registering Reforger mod: {}", modId);
+        WorkshopMod mod = modsFacade.registerReforgerMod(modId, name);
         return ResponseEntity.ok(modMapper.modToModDto(mod));
     }
 

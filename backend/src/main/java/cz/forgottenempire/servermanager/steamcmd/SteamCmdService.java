@@ -27,9 +27,16 @@ public class SteamCmdService {
         ServerType serverType = server.getType();
         String betaBranchParameter = "-beta " + server.getBranch().toString().toLowerCase();
 
-        SteamCmdParameters parameters = new SteamCmdParameters.Builder()
-                .withInstallDir(pathsFactory.getServerPath(serverType).toAbsolutePath().toString())
-                .withLogin()
+        SteamCmdParameters.Builder builder = new SteamCmdParameters.Builder()
+                .withInstallDir(pathsFactory.getServerPath(serverType).toAbsolutePath().toString());
+
+        if (serverType == ServerType.REFORGER) {
+            builder.withAnonymousLogin();
+        } else {
+            builder.withLogin();
+        }
+
+        SteamCmdParameters parameters = builder
                 .withAppInstall(Constants.SERVER_IDS.get(serverType), true, betaBranchParameter)
                 .build();
         return enqueueJob(new SteamCmdJob(serverType, parameters));

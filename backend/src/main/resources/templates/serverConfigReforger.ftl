@@ -29,7 +29,8 @@
 <#list activeMods as mod>
   {
   "modId": "${mod.id}",
-  "name": "${mod.name}"
+  "name": "${mod.name}",
+  "version": ""
   }<#sep>,</#sep>
 </#list>
 ]

@@ -16,8 +16,19 @@ public class ModMetadataService {
         this.apiMetadataProvider = apiMetadataProvider;
     }
 
+    /**
+     * Fetch metadata for a Steam Workshop mod (Arma 3 / DayZ)
+     */
     public ModMetadata fetchModMetadata(long modId) {
         return apiMetadataProvider.fetchModMetadata(modId)
                 .orElseThrow(() -> new NotFoundException("Mod ID " + modId + " not found."));
+    }
+
+    /**
+     * Fetch metadata for a Bohemia Workshop mod (Arma Reforger) by hex GUID
+     */
+    public ModMetadata fetchBohemiaModMetadata(String hexModId) {
+        return apiMetadataProvider.fetchBohemiaModMetadata(hexModId)
+                .orElseThrow(() -> new NotFoundException("Reforger mod '" + hexModId + "' not found on Bohemia Workshop."));
     }
 }

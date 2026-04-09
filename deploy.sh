@@ -138,26 +138,7 @@ collect_user_config() {
 
     echo ""
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${BOLD}  Step 4: Steam API Key${NC}"
-    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo ""
-    echo -e "  To manage Arma Reforger Workshop Mods, Centiria GSM needs a Steam API Key."
-    echo -e "  "
-    echo -e "  ${BOLD}How to get it:${NC}"
-    echo -e "  1. Log into your Steam account on your computer browser."
-    echo -e "  2. Go to: ${CYAN}https://steamcommunity.com/dev/apikey${NC}"
-    echo -e "  3. You will be asked for a ${BOLD}\"Domain Name\"${NC}."
-    echo -e "     ${YELLOW}Tip:${NC} You can simply enter your domain (${DOMAIN:-centiria.my}) or 'localhost'."
-    echo -e "     Steam only needs this for their records; it does not affect functionality."
-    echo -e "  4. Click Register and copy the generated 32-character key."
-    echo ""
-
-    read -rp "$(echo -e "${CYAN}Enter Steam API Key${NC} (leave empty to configure later in panel): ")" INPUT_STEAM_KEY
-    STEAM_API_KEY="${INPUT_STEAM_KEY:-}"
-
-    echo ""
-    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${BOLD}  Step 5: Timezone${NC}"
+    echo -e "${BOLD}  Step 4: Timezone${NC}"
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
 
@@ -177,7 +158,6 @@ collect_user_config() {
     echo -e "  Panel User:    ${CYAN}${AUTH_USERNAME}${NC}"
     echo -e "  Panel Pass:    ${CYAN}********${NC}"
     echo -e "  DB Password:   ${CYAN}********${NC}"
-    echo -e "  Steam API Key: ${CYAN}${STEAM_API_KEY:-[not set]}${NC}"
     echo -e "  Timezone:      ${CYAN}${TIMEZONE}${NC}"
     echo ""
 
@@ -345,9 +325,6 @@ MYSQL_USER=centiria_gsm
 MYSQL_PASSWORD=${MYSQL_PASSWORD}
 MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
 
-# Steam API key
-STEAM_API_KEY=${STEAM_API_KEY}
-
 # JWT secret for authentication tokens
 JWT_SECRET=${JWT_SECRET}
 
@@ -497,15 +474,7 @@ print_summary() {
     echo -e "  Password:  ${YELLOW}${MYSQL_PASSWORD}${NC}"
     echo -e "  Root Pass: ${YELLOW}${MYSQL_ROOT_PASSWORD}${NC}"
     echo ""
-    echo -e "${BOLD}Important:${NC}"
     echo -e "  1. ${RED}Save these credentials now!${NC} They won't be shown again."
-    if [ -z "$STEAM_API_KEY" ]; then
-        echo -e "  2. Generate a Steam API key at: https://steamcommunity.com/dev/apikey"
-        echo -e "  3. Add your Steam API key: ${CYAN}nano ${INSTALL_DIR}/.env${NC}"
-        echo -e "  4. After adding the key, restart: ${CYAN}cd ${INSTALL_DIR} && docker compose restart${NC}"
-    else
-        echo -e "  2. Steam API key is configured."
-    fi
     echo ""
     echo -e "${BOLD}Management Commands:${NC}"
     echo -e "  Start:     ${CYAN}cd ${INSTALL_DIR} && docker compose up -d${NC}"
@@ -534,7 +503,6 @@ Database User: centiria_gsm
 Database Password: ${MYSQL_PASSWORD}
 Database Root Password: ${MYSQL_ROOT_PASSWORD}
 JWT Secret: ${JWT_SECRET}
-Steam API Key: ${STEAM_API_KEY:-[not set]}
 CRED
 
     if [ -n "$DOMAIN" ]; then

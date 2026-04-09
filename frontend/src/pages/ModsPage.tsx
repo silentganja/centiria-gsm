@@ -4,6 +4,7 @@ import PresetsManagement from "../components/mods/PresetsManagement";
 import ModsOverview from "../components/mods/ModsOverview";
 import ModsCollections from "../components/mods/ModsCollections";
 import ModPackTemplates from "../components/mods/ModPackTemplates";
+import BohemiaBrowser from "../components/mods/BohemiaBrowser";
 import {useNavigate, useParams} from "react-router-dom";
 import {SyntheticEvent} from "react";
 import ExtensionIcon from '@mui/icons-material/Extension';
@@ -36,7 +37,7 @@ const ModsPage = () => {
                     <ExtensionIcon sx={{color: '#64748b'}}/>
                 </Stack>
                 <Typography variant="body2" sx={{color: '#64748b'}}>
-                    Manage Steam Workshop mods, presets, templates, and collections for your servers
+                    Browse the Bohemia Workshop, manage mods, presets, templates, and collections for your servers
                 </Typography>
             </Stack>
             <Box
@@ -62,6 +63,7 @@ const ModsPage = () => {
                     scrollButtons="auto"
                 >
                     <Tab value="OVERVIEW" label="Overview"/>
+                    <Tab value="BROWSE" label="Browse Workshop"/>
                     <Tab value="MODS" label="Mod Management"/>
                     <Tab value="TEMPLATES" label="Mod Packs"/>
                     <Tab value="PRESETS" label="Presets"/>
@@ -69,6 +71,7 @@ const ModsPage = () => {
                 </Tabs>
                 <Box sx={{p: {xs: 2, md: 3}}}>
                     {currentTab === "OVERVIEW" && <ModsOverview/>}
+                    {currentTab === "BROWSE" && <BohemiaBrowser/>}
                     {currentTab === "MODS" && <ModsManagement/>}
                     {currentTab === "TEMPLATES" && <ModPackTemplates/>}
                     {currentTab === "PRESETS" && <PresetsManagement/>}

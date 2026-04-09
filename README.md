@@ -6,7 +6,7 @@
 ### Next-Generation Game Server Management for Arma Reforger
 
   <p align="center">
-    <img src="https://img.shields.io/badge/Version-2.0.0-00e87b?style=for-the-badge&logoColor=white&logo=checkmarx" alt="Version 2.0.0" />
+    <img src="https://img.shields.io/badge/Version-2.1.0-00e87b?style=for-the-badge&logoColor=white&logo=checkmarx" alt="Version 2.1.0" />
     <img src="https://img.shields.io/badge/Platform-Ubuntu_22.04-38bdf8?style=for-the-badge&logo=ubuntu&logoColor=white" alt="Ubuntu" />
     <img src="https://img.shields.io/badge/Engine-Enfusion-red?style=for-the-badge&logoColor=white" alt="Arma Reforger" />
     <img src="https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Ready" />
@@ -16,7 +16,7 @@
   </p>
 
   <p align="center">
-    <b>A premium, high-performance web-based administration tool for deploying, managing, and monitoring Arma Reforger dedicated servers on your VPS. Built with a stunning Brutalist/Glassmorphism interface.</b>
+    <b>A premium, high-performance web-based administration tool for deploying, managing, and monitoring Arma Reforger dedicated servers on your VPS. Built with a stunning Brutalist/Glassmorphism interface and native Bohemia Workshop integration.</b>
   </p>
 
   <p align="center">
@@ -24,7 +24,8 @@
     <a href="#-interface-showcase">Showcase</a> •
     <a href="#-deployment-in-one-command">Installation</a> •
     <a href="#-post-installation-guide">Setup Guide</a> •
-    <a href="#-architecture--tech-stack">Tech Stack</a>
+    <a href="#-architecture--tech-stack">Tech Stack</a> •
+    <a href="#-bohemia-workshop-integration">Workshop</a>
   </p>
 </div>
 
@@ -43,10 +44,15 @@ Centiria GSM brings enterprise-grade management capabilities to your Arma Reforg
 - **Intelligent Port Management**: Automated port assignment and conflict prevention across all instances.
 - **JSON Configuration Engine**: Configure server parameters, passwords, and admin lists without touching raw JSON files.
 - **Automated Scheduling**: Set up precise daily restart schedules to keep servers fresh.
+- **Anonymous SteamCMD Download**: Base server files are downloaded via SteamCMD using anonymous login. No Steam account required.
 
-### 🧩 Workshop & Mod Integration (V2)
+### 🌐 Bohemia Workshop Integration (V2.1)
 
-- **Mod Browser**: Browse, search, and install mods directly from the Steam Workshop.
+> **New in V2.1**: Centiria GSM now integrates directly with the **Bohemia Interactive Workshop** at `reforger.armaplatform.com`. No Steam API Key, no Steam Account, and no Steam Guard tokens required.
+
+- **Live Workshop Browser**: Look up any Arma Reforger mod by its Bohemia hex GUID directly from the admin panel.
+- **One-Click Registration**: Preview mod details (name, author, description, thumbnail) and register mods for your server with a single click.
+- **Native Mod Downloading**: Registered mods are automatically downloaded by the Arma Reforger server executable on startup via the Bohemia backend. Zero manual file management.
 - **Smart Mod Collections**: Organize your mods into reusable, taggable custom collections.
 - **Curated Mod Packs**: 5 built-in, pre-tested mod pack templates containing up to 20 mods each:
   - 🎯 **Realism & MilSim**: Hardcore tactical combat and medical frameworks.
@@ -69,17 +75,62 @@ Centiria GSM brings enterprise-grade management capabilities to your Arma Reforg
 - **Live Console Access**: Interact directly with the server terminal in real-time. Execute RCON-style commands instantly.
 - **Mission Management**: Upload, organize, and deploy custom Arma Reforger scenarios (`.ent` files).
 - **Log Viewer**: Stream, tail, and analyze server logs dynamically with syntax coloring.
-- **App Configuration**: Manage Steam Guard tokens, API keys, paths, and application update settings right from the UI.
+- **System Settings**: View platform configuration status and Bohemia integration health.
+
+---
+
+## 🌐 Bohemia Workshop Integration
+
+### How it Works
+
+Arma Reforger uses a fundamentally different architecture from Arma 3 and DayZ for mod management:
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                    CENTIRIA GSM PANEL                        │
+│                                                              │
+│  1. Admin browses Bohemia Workshop via the panel             │
+│  2. Admin clicks "Add to Server" on a mod                    │
+│  3. Panel scrapes mod metadata from armaplatform.com         │
+│  4. Mod GUID is injected into server.json config             │
+│                                                              │
+├──────────────────────────────────────────────────────────────┤
+│                 ARMA REFORGER SERVER                          │
+│                                                              │
+│  5. On startup, server reads server.json                     │
+│  6. Server contacts Bohemia backend directly                 │
+│  7. All listed mods are downloaded/updated automatically     │
+│  8. Server comes online with mods ready                      │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+```
+
+### Key Differences from Arma 3
+
+| Feature | Arma 3 (Legacy) | Arma Reforger (Centiria GSM) |
+|---------|-----------------|------------------------------|
+| Mod Download | SteamCMD + Steam Account | Native server executable |
+| Authentication | Steam Guard + API Key | None required |
+| Mod IDs | Numeric Steam Workshop IDs | Hex GUIDs (e.g. `595F2BF2F44836FB`) |
+| Metadata Source | Steam Workshop API | Bohemia Workshop scraper |
+| Version Management | Manual | Automatic (latest on each startup) |
+
+### Finding Mod IDs
+
+1. Open [reforger.armaplatform.com/workshop](https://reforger.armaplatform.com/workshop)
+2. Click on any mod
+3. The hex GUID is in the URL: `https://reforger.armaplatform.com/workshop/595F2BF2F44836FB-RHS-StatusQuo`
+4. Copy `595F2BF2F44836FB` and paste it into the Centiria GSM **Browse Workshop** tab
 
 ---
 
 ## 🎨 Interface Showcase
 
-Our platform ditches standard utilitarian admin panels. We built Centiria GSM using a **Brutalist / Glassmorphism** design system—featuring deep dark mode aesthetics, dynamic GSAP kinetic animations, blurred backdrops, and responsive layouts built to feel like a high-end military operations center.
+Our platform ditches standard utilitarian admin panels. We built Centiria GSM using a **Brutalist / Glassmorphism** design system — featuring deep dark mode aesthetics, dynamic GSAP kinetic animations, blurred backdrops, and responsive layouts built to feel like a high-end military operations center.
 
 |                                                   🎛️ **Command Dashboard**                                                   |                                               📦 **Workshop Management**                                               |
 | :--------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------: |
-| System resources, active servers, recent activity, and installation status at a glance. Beautiful metrics and quick actions. | Full integration with Steam Workshop. Manage Mod Packs, Collections, Presets, and visualize massive mod installations. |
+| System resources, active servers, recent activity, and installation status at a glance. Beautiful metrics and quick actions. | Full integration with Bohemia Workshop. Browse mods, manage Mod Packs, Collections, and Presets from one unified tab. |
 
 |                                   📈 **Real-Time Telemetry**                                    |                                     💻 **Console Integration**                                     |
 | :---------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------: |
@@ -107,6 +158,8 @@ We designed Centiria GSM to be installed by anyone, regardless of Linux experien
 - **Network**: A domain (e.g., `centiria.my`) pointing to your VPS IP (Optional, but required for HTTPS/SSL).
 - **Access**: `root` privileges.
 
+> **Note**: No Steam Account, Steam API Key, or Steam Guard token is required. Arma Reforger server files are downloaded anonymously via SteamCMD, and all mods are handled natively by the Bohemia backend.
+
 ### The Magic Command
 
 SSH into your fresh VPS and run the following command as `root`:
@@ -119,33 +172,53 @@ sudo bash -c "$(curl -sSL https://raw.githubusercontent.com/silentganja/centiria
 
 The automated installer will interactively prompt you for:
 
-1. **Domain Name**: For automatic Nginx + SSL configuration (Leave blank if you don't have a domain).
-2. **Admin Credentials**: Set your specific Web UI login password (or let the system generate a secure one).
-3. **Database Credentials**: For the internal MySQL structure (Auto-generation available).
-4. **Steam API Key**: (Optional during setup, can be added later).
-5. **Timezone**: Set your operating timezone for logs and auto-restarts.
+| Step | Prompt | Description |
+|------|--------|-------------|
+| **1** | Domain Name | For automatic Nginx + SSL configuration. Leave blank if you don't have a domain. |
+| **2** | Admin Credentials | Set your Web UI login username and password (or let the system auto-generate a secure one). |
+| **3** | Database Credentials | For the internal MySQL structure (auto-generation available). |
+| **4** | Timezone | Set your operating timezone for logs and auto-restarts. Default: `Asia/Kuala_Lumpur`. |
 
-Once you confirm the summary, the installer handles system updates, firewall configuration (UFW), directory structuring, Nginx setup, Let's Encrypt certification, and complete container deployment.
+Once you confirm the summary, the installer handles:
+- ✅ System updates & dependency installation
+- ✅ Firewall configuration (UFW) with Arma Reforger game ports
+- ✅ Directory structuring & Git clone
+- ✅ Nginx reverse proxy setup
+- ✅ Let's Encrypt SSL certification
+- ✅ Docker Compose deployment
+- ✅ Systemd auto-start service creation
 
 ---
 
 ## 🚀 Post-Installation Guide
 
-You are 5 minutes away from playing. Follow these steps after the script finishes:
+You are **5 minutes** away from playing. Follow these steps after the script finishes:
 
-1. **Access the Panel**: Navigate to `https://your-domain.com` (or `http://YOUR_VPS_IP:8080`).
-2. **Authenticate**: Log in using the `admin` account and the password you set during the deployment wizard.
-3. **Configure Steam Guard**:
-   - Go to **App Config**.
-   - Input your Steam Username & Password (this is required to download Arma Reforger server files).
-   - _Note: Arma Reforger server requires a valid Steam account._
-4. **Install Arma Reforger Core**:
-   - Return to the **Dashboard**.
-   - Click the flashing green **Install / Update Game Server** button. Wait for SteamCMD to finish.
-5. **Create & Play**:
-   - Navigate to the **Servers** tab.
-   - Click **Create Server**. Set your server name, max players, and password.
-   - Hit **Start**!
+### Step 1: Access the Panel
+Navigate to `https://your-domain.com` (or `http://YOUR_VPS_IP:8080` if no domain configured).
+
+### Step 2: Authenticate
+Log in using the admin credentials you set during the deployment wizard.
+
+### Step 3: Install Arma Reforger Core
+- Return to the **Dashboard**.
+- Click the flashing green **Install / Update Game Server** button.
+- Wait for SteamCMD to finish downloading the base server files (~2GB). This uses anonymous login, no Steam account needed.
+
+### Step 4: Add Your Mods
+- Navigate to the **Workshop** tab.
+- Click **Browse Workshop**.
+- Enter any Bohemia hex GUID (e.g., `595F2BF2F44836FB` for RHS: Status Quo).
+- Click **Look Up** to preview the mod details.
+- Click **Add to Server** to register the mod.
+- Repeat for all desired mods, or use the **Mod Packs** tab for curated templates.
+
+### Step 5: Create & Play
+- Navigate to the **Servers** tab.
+- Click **Create Server**. Set your server name, max players, and password.
+- Hit **Start**! The server will automatically download all registered mods from Bohemia's backend on first launch.
+
+> **Tip**: Check the server console output for `[DownloadManager] Downloading addon...` messages confirming mod downloads.
 
 ---
 
@@ -190,6 +263,7 @@ Centiria GSM is built using a modern, scalable microservice architecture aimed a
 - **Language**: Java 17
 - **Database Mapping**: Hibernate ORM
 - **Security**: JWT Authentication, Spring Security
+- **Workshop Integration**: Custom HTML scraper for `reforger.armaplatform.com`
 
 ### Infrastructure
 
@@ -197,7 +271,26 @@ Centiria GSM is built using a modern, scalable microservice architecture aimed a
 - **Containerization**: Docker & Docker Compose
 - **Web Server**: Nginx
 - **Security**: Let's Encrypt (Certbot), UFW Firewall
-- **Integration Layer**: Custom SteamCMD wrappers, JSON Schema translators for Enfusion engine configurations.
+- **Integration Layer**: Anonymous SteamCMD for base server, Bohemia native mod downloads, JSON Schema translators for Enfusion engine configurations.
+
+### Data Flow
+
+```
+User (Browser) ──── React SPA ──── /api/* ──── Spring Boot ──┬── MySQL (state)
+                                                              ├── SteamCMD (anonymous, server files only)
+                                                              ├── Bohemia Workshop Scraper (mod metadata)
+                                                              └── ArmaReforgerServer (native mod downloads)
+```
+
+---
+
+## 🛡️ Security Considerations
+
+- **JWT Authentication**: All API endpoints are protected with JSON Web Token authentication.
+- **AES-256 Encryption**: Sensitive database fields are encrypted at rest.
+- **UFW Firewall**: Only required ports are exposed (SSH, HTTP, HTTPS, Game ports).
+- **No Steam Credentials Stored**: Unlike legacy tools, Centiria GSM stores zero Steam account passwords or tokens.
+- **File Permissions**: Configuration files (``.env``, ``CREDENTIALS.txt``) are set to ``600`` (owner-only access).
 
 ---
 
@@ -206,6 +299,7 @@ Centiria GSM is built using a modern, scalable microservice architecture aimed a
 - Originally based on the incredibly robust foundational backend framework of [fugasjunior/arma-server-manager](https://github.com/fugasjunior/arma-server-manager).
 - Extensively redesigned, rewritten, and modernized by **Centiria**.
 - UI/UX powered by Centiria's internal **Industrial Bronze & Slate** design systems.
+- Workshop integration powered by data from [reforger.armaplatform.com](https://reforger.armaplatform.com/workshop).
 
 ---
 
