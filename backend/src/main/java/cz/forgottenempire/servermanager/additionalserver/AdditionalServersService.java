@@ -98,7 +98,7 @@ class AdditionalServersService {
         return instanceInfo.isAlive();
     }
 
-    // TODO split log files automatically
+    // NOTE split log files automatically
     private File getLogFile(String serverName) {
         File logFile = new File(Path.of(logDirectory, sanitizeServerName(serverName), "log.txt").toUri());
         File parent = logFile.getParentFile();

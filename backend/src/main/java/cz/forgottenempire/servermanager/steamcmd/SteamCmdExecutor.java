@@ -30,6 +30,7 @@ import static cz.forgottenempire.servermanager.steamcmd.outputprocessor.SteamCmd
 
 @Service
 @Slf4j
+@SuppressWarnings("null")
 class SteamCmdExecutor {
 
     private static final String STEAM_CREDENTIALS_PLACEHOLDER = "<{STEAM_CREDENTIALS_PLACEHOLDER}>";
@@ -137,7 +138,7 @@ class SteamCmdExecutor {
                 .map(String::toLowerCase)
                 .map(this::removeParametersFromOutputLine)
                 // Issue #69 missing steamservice.so and libSDL3.so.0 caused the job to be marked as failed
-                // TODO find better solution to determine the job result
+                // NOTE find better solution to determine the job result
                 .filter(line -> !line.contains("cannot open shared object file"))
                 .filter(this::containsErrorKeyword)
                 .findFirst()

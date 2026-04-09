@@ -19,9 +19,7 @@ const NewServerPage = () => {
         });
     }, [navigate]);
 
-    type FixMeLater = any;
-
-    const handleSubmit = async (values: FixMeLater) => {
+    const handleSubmit = async (values: import("../dtos/ServerDto").ReforgerServerDto) => {
         const server = {
             ...values,
             type: type ?? "REFORGER",

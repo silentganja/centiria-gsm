@@ -97,7 +97,7 @@ class WorkshopModsController {
     @DeleteMapping
     public ResponseEntity<?> uninstallMods(@RequestParam List<Long> modIds) {
         log.info("Uninstalling mods: {}", modIds);
-        modIds.forEach(modsFacade::uninstallMod);
+        modIds.forEach(id -> modsFacade.uninstallMod(id));
         return ResponseEntity.noContent().build();
     }
 

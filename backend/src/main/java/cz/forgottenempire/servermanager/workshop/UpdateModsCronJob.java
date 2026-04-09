@@ -13,7 +13,7 @@ class UpdateModsCronJob {
 
     @Autowired
     public UpdateModsCronJob(WorkshopModsFacade modsFacade) {
-        // TODO make customizable through UI
+        // NOTE make customizable through UI
         log.info("Scheduling mod update cronjob for 03:00 AM every day");
         this.modsFacade = modsFacade;
     }

@@ -1,10 +1,10 @@
 import {Box, Stack, Tab, Tabs, Typography} from "@mui/material";
-import ModsManagement from "../components/mods/ModsManagement";
-import PresetsManagement from "../components/mods/PresetsManagement";
-import ModsOverview from "../components/mods/ModsOverview";
-import ModsCollections from "../components/mods/ModsCollections";
-import ModPackTemplates from "../components/mods/ModPackTemplates";
-import BohemiaBrowser from "../components/mods/BohemiaBrowser";
+import ModsManagement from "../components/mods/ModsManagement.tsx";
+import PresetsManagement from "../components/mods/PresetsManagement.tsx";
+import ModsOverview from "../components/mods/ModsOverview.tsx";
+import ModsCollections from "../components/mods/ModsCollections.tsx";
+import ModPackTemplates from "../components/mods/ModPackTemplates.tsx";
+import BohemiaBrowser from "../components/mods/BohemiaBrowser.tsx";
 import {useNavigate, useParams} from "react-router-dom";
 import {SyntheticEvent} from "react";
 import ExtensionIcon from '@mui/icons-material/Extension';

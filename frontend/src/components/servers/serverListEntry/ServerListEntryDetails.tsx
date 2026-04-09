@@ -24,10 +24,10 @@ export function ServerListEntryDetails(props: {
                 Logs
             </Button>
 
-            <AutomaticRestartSettings serverId={props.server.id!} dto={props.server.automaticRestart}/>
+            <AutomaticRestartSettings serverId={props.server.id as number} dto={props.server.automaticRestart}/>
 
             {props.serverStatus?.alive && props.server.type === "ARMA3" &&
-                <HeadlessClientControls serverId={props.server.id!} serverStatus={props.serverStatus}/>}
+                <HeadlessClientControls serverId={props.server.id as number} serverStatus={props.serverStatus}/>}
         </Stack>
     </Stack>;
 }

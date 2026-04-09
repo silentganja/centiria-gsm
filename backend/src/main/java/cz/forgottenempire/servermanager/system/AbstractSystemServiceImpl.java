@@ -7,6 +7,7 @@ import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings("null")
 abstract class AbstractSystemServiceImpl implements SystemService {
 
     protected final OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
@@ -78,12 +79,12 @@ abstract class AbstractSystemServiceImpl implements SystemService {
     }
 
     protected Supplier<Long> diskSpaceLeftSupplier() {
-        // TODO this can be incorrect for system with multiple drives, preferably use the same drive as the game servers
+        // NOTE this can be incorrect for system with multiple drives, preferably use the same drive as the game servers
         return () -> new File("/").getUsableSpace();
     }
 
     protected Supplier<Long> diskSpaceTotalSupplier() {
-        // TODO this can be incorrect for system with multiple drives, preferably use the same drive as the game servers
+        // NOTE this can be incorrect for system with multiple drives, preferably use the same drive as the game servers
         return () -> new File("/").getTotalSpace();
     }
 
